@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_note_app/core/helpers/services/local/db_helper.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/pages/my_notes_display_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -18,10 +19,20 @@ class MyNotesLandingScreen extends StatefulWidget {
 class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
 
   final NotesBloc notesBloc = NotesBloc();
+  final dbHelper = DatabaseHelper.instance;
+  List<Map<String,dynamic>> allNotes = [];
+
+  Future<int> queryAll() async {
+    allNotes = (await dbHelper.queryAll())!;
+    print('ALL NOTES: ${allNotes}');
+    print(allNotes.length);
+    notesBloc.add(MyNotesInitialEvent(notes: allNotes));
+    return allNotes.length;
+  }
   @override
   void initState() {
     super.initState();
-    notesBloc.add(MyNotesInitialEvent());
+    queryAll();
   }
 
 
@@ -37,6 +48,8 @@ class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
               switch(state) {
                 case MyNotesInitialState _:
                   return _buildMyNotesLandingState(state);
+                case MyNotesNavigatetoNotesDisplayScreenState _:
+                  return MyNotesDisplayScreen();
                 default:
                   return SizedBox();
               }
@@ -112,4 +125,5 @@ class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
       ),
     );
   }
+
 }

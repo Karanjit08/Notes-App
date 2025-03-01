@@ -14,7 +14,12 @@ class NotesBloc extends Bloc<NotesEvent, NotesState> {
 
   FutureOr<void> myNotesInitialEvent(MyNotesInitialEvent event, Emitter<NotesState> emit) {
     print('My Notes Initial State emitted');
-    emit(MyNotesInitialState());
+    if(event.notes.length > 0){
+      emit(MyNotesNavigatetoNotesDisplayScreenState());
+    }
+    else {
+      emit(MyNotesInitialState());
+    }
   }
 
   FutureOr<void> myNotesNavigatetoNotesDisplayScreenEvent(MyNotesNavigatetoNotesDisplayScreenEvent event, Emitter<NotesState> emit) {
