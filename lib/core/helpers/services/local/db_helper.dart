@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter_note_app/modules/my_notes/data/notes_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,13 +43,14 @@ class DatabaseHelper {
 
   // FUNCTIONS TO CREATE, READ, UPDATE, DELETE data from Database
 
-  Future<List<Map<String,dynamic>>?> queryAll() async {
+  Future<List<NotesModel>?> queryAll() async {
     Database? db = await instance.database;
-    return await db?.query(table);
+    final List<Map<String,dynamic>>? myNotes = await db?.query(table);
+    return myNotes?.map((map) => NotesModel.fromMap(map)).toList();
   }
 
-  Future<int?> insert(Map<String,dynamic> row) async {
+  Future<int?> insert(NotesModel notesModel) async {
     Database? db = await instance.database;
-    return await db?.insert(table,row);
+    return await db?.insert(table,notesModel.toMap());
   }
 }

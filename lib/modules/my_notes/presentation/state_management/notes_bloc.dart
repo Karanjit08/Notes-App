@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter_note_app/modules/my_notes/data/notes_model.dart';
 import 'package:meta/meta.dart';
 
 part 'notes_event.dart';

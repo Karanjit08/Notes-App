@@ -5,7 +5,7 @@ abstract class NotesEvent {}
 
 
 class MyNotesInitialEvent extends NotesEvent {
-  List<Map<String,dynamic>> notes;
+  List<NotesModel> notes;
   MyNotesInitialEvent({required this.notes});
 }
 
