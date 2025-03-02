@@ -10,3 +10,5 @@ class MyNotesInitialEvent extends NotesEvent {
 }
 
 class MyNotesNavigatetoNotesDisplayScreenEvent extends NotesEvent {}
+
+class MyNotesNavigatetoAddNotesScreenEvent extends NotesEvent {}

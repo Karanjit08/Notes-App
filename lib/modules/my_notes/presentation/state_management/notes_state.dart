@@ -8,3 +8,5 @@ class NotesInitial extends NotesState {}
 class MyNotesInitialState extends NotesState {}
 
 class MyNotesNavigatetoNotesDisplayScreenState extends NotesState {}
+
+class MyNotesNavigatetoAddNotesScreenState extends NotesState {}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_note_app/core/helpers/services/local/db_helper.dart';
 import 'package:flutter_note_app/modules/my_notes/data/notes_model.dart';
+import 'package:flutter_note_app/modules/my_notes/presentation/pages/my_notes_add_screen.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/state_management/notes_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -16,15 +17,6 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
   final NotesBloc notesBloc = NotesBloc();
   final dbHelper = DatabaseHelper.instance;
 
-  void insertData() async {
-    NotesModel notesModel =
-        NotesModel(title: 'Flutter Developer', subtitle: 'Hybrid');
-    final id = await dbHelper.insert(notesModel);
-    print('Notes added with ID: ${id}');
-    setState(() {
-      getAllNotes();
-    });
-  }
 
   Future<List<NotesModel>> getAllNotes() async {
     return await dbHelper.queryAll() ?? [];
@@ -34,9 +26,9 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor: HexColor('#d9614c'),
         onPressed: () {
-          insertData();
+          notesBloc.add(MyNotesNavigatetoAddNotesScreenEvent());
         },
         child: Icon(
           Icons.add,
@@ -58,7 +50,7 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No Notes Available'));
+                      return const Center(child: Text('No Notes Available',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),));
                     } else {
                       return ListView.builder(
                           itemCount: snapshot.data?.length,
@@ -81,7 +73,12 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
                     }
                   });
             },
-            listener: (BuildContext context, NotesState state) {}),
+            listener: (BuildContext context, NotesState state) {
+              switch(state.runtimeType) {
+                case MyNotesNavigatetoAddNotesScreenState:
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyNotesAddScreen()));
+              }
+            }),
       ),
     );
   }
