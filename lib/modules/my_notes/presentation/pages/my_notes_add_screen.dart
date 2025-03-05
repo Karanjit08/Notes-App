@@ -11,7 +11,7 @@ class MyNotesAddScreen extends StatefulWidget {
   int? id;
   String? title;
   String? description;
-  MyNotesAddScreen({super.key,this.id, this.title, this.description});
+  MyNotesAddScreen({super.key, this.id, this.title, this.description});
 
   @override
   State<MyNotesAddScreen> createState() => _MyNotesAddScreenState();
@@ -38,9 +38,13 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
       notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
     } else {
       print('No ID found for deletion');
-    }  }
+    }
+  }
 
-
+  void updateData(String title,String description) async {
+    NotesModel notesModel = NotesModel(id: widget.id, title: title, subtitle: description);
+    final id = await dbHelper.update(widget.id!, notesModel);
+  }
 
   @override
   void initState() {
@@ -91,11 +95,16 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
     return FloatingActionButton(
         backgroundColor: HexColor('#d9614c'),
         onPressed: () {
-          print('Title: ${titleController.text}');
-          print('Description: ${descriptionController.text}');
-          insertData(titleController.text, descriptionController.text);
-          titleController.clear();
-          descriptionController.clear();
+          if(widget.id != null) {
+            updateData(titleController.text, descriptionController.text);
+          }
+          else {
+            print('Title: ${titleController.text}');
+            print('Description: ${descriptionController.text}');
+            insertData(titleController.text, descriptionController.text);
+            titleController.clear();
+            descriptionController.clear();
+          }
           notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
         },
         child: Icon(Icons.save));

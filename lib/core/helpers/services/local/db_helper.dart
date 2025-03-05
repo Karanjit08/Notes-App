@@ -59,4 +59,10 @@ class DatabaseHelper {
     var res = await db?.delete(table,where: "id = ?",whereArgs: [id]);
     return res;
   }
+
+  Future<int?> update(int id, NotesModel notesModel) async {
+    Database? db = await instance.database;
+    var res = await db?.update(table, notesModel.toMap(),where: "id = ?",whereArgs: [id]);
+    return res;
+  }
 }
