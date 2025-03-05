@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_note_app/core/config/themes/themes.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/pages/my_notes_landing_screen.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/state_management/notes_bloc.dart';
 
@@ -27,6 +28,9 @@ class _flutterAppState extends State<flutterApp> {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           home: MyNotesLandingScreen(),
+          theme: lightMode,
+          darkTheme: darkMode,
+          themeMode: ThemeMode.system,
         )
     );
   }

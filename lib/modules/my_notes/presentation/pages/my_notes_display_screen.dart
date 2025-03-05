@@ -26,19 +26,19 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        backgroundColor: HexColor('#d9614c'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         onPressed: () {
           notesBloc.add(MyNotesNavigatetoAddNotesScreenEvent());
         },
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondary,
         ),
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: HexColor('#F8EEE2'),
+        color: Theme.of(context).colorScheme.surface,
         child: BlocConsumer<NotesBloc, NotesState>(
             bloc: notesBloc,
             builder: (context, state) {
@@ -50,7 +50,7 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No Notes Available',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),));
+                      return Center(child: Text('No Notes Available',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600,color: Theme.of(context).colorScheme.primary),));
                     } else {
                       return ListView.builder(
                           itemCount: snapshot.data?.length,
@@ -69,12 +69,12 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
                                     horizontal: 16, vertical: 8),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
+                                    color: Theme.of(context).colorScheme.secondaryContainer,
                                     border: Border.all(
-                                        color: Colors.black, width: 1)),
+                                        color: Theme.of(context).colorScheme.secondary, width: 1)),
                                 child: ListTile(
-                                  title: Text(note.title ?? "Untitled"),
-                                  subtitle: Text(note.subtitle ?? ""),
+                                  title: Text(note.title ?? "Untitled",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600,color: Theme.of(context).colorScheme.primary),),
+                                  subtitle: Text(note.subtitle ?? "",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400,color: Theme.of(context).colorScheme.onPrimary)),
                                 ),
                               ),
                             );

@@ -70,7 +70,7 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          color: HexColor('#F8EEE2'),
+          color: Theme.of(context).colorScheme.surface,
           child: BlocConsumer(
               bloc: notesBloc,
               builder: (context, state) {
@@ -93,7 +93,7 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
 
   Widget _buildFloatingActionButton() {
     return FloatingActionButton(
-        backgroundColor: HexColor('#d9614c'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         onPressed: () {
           if(widget.id != null) {
             updateData(titleController.text, descriptionController.text);
@@ -107,7 +107,7 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
           }
           notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
         },
-        child: Icon(Icons.save));
+        child: Icon(Icons.save,color: Theme.of(context).colorScheme.secondary,));
   }
 
   Widget _buildTitleTextField() {
@@ -115,15 +115,18 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
       child: TextField(
         controller: titleController,
         maxLines: null,
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
-        cursorColor: Colors.black,
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600,color: Theme.of(context).colorScheme.primary),
+        cursorColor: Theme.of(context).colorScheme.primary,
         decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
             hintText: 'Add Title',
+            hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.primary
+            ),
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 width: 1,
-                color: Colors.black26,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             )),
       ),
@@ -140,11 +143,15 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
         style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w400,
+            color: Theme.of(context).colorScheme.onPrimary
         ),
-        cursorColor: Colors.black,
+        cursorColor: Theme.of(context).colorScheme.primary,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
           hintText: 'Add Description',
+          hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary
+          ),
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
           enabledBorder: InputBorder.none,

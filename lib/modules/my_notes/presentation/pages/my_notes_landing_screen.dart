@@ -41,7 +41,7 @@ class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
     return Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
-        color: HexColor('#F8EEE2'),
+        color: Theme.of(context).colorScheme.surface,
         child: BlocConsumer<NotesBloc,NotesState>(
           bloc: notesBloc,
             builder: (context,state) {
@@ -90,12 +90,12 @@ class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
   }
 
   Widget _buildTitleText() {
-    return Text('Create your First Note',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 24),);
+    return Text('Create your First Note',style: TextStyle(fontWeight: FontWeight.w700,fontSize: 24,color: Theme.of(context).colorScheme.primary),);
   }
   
   Widget _buildSubtitleText() {
     return Text('Add a note about anything',style: TextStyle(
-      color: HexColor('#595550'),
+      color: Theme.of(context).colorScheme.onPrimary,
       fontSize: 16,
       fontWeight: FontWeight.bold
     ),
@@ -115,10 +115,10 @@ class _MyNotesLandingScreenState extends State<MyNotesLandingScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 18),
-                backgroundColor: HexColor('#d9614c')
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer
             ),
             child: Text('Create a Note',style: TextStyle(
-                color: HexColor('#fffbfa'),
+                color: Theme.of(context).colorScheme.secondary,
                 fontSize: 20,
                 fontWeight: FontWeight.w600
             ),)),
