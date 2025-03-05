@@ -56,17 +56,26 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
                           itemCount: snapshot.data?.length,
                           itemBuilder: (context, index) {
                             NotesModel note = snapshot.data![index];
-                            return Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: Colors.black, width: 1)),
-                              child: ListTile(
-                                title: Text(note.title ?? "Untitled"),
-                                subtitle: Text(note.subtitle ?? ""),
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => MyNotesAddScreen(
+                                  id: note.id,
+                                  title: note.title,
+                                  description: note.subtitle,
+                                )));
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black, width: 1)),
+                                child: ListTile(
+                                  title: Text(note.title ?? "Untitled"),
+                                  subtitle: Text(note.subtitle ?? ""),
+                                ),
                               ),
                             );
                           });
@@ -76,7 +85,10 @@ class _MyNotesDisplayScreenState extends State<MyNotesDisplayScreen> {
             listener: (BuildContext context, NotesState state) {
               switch(state.runtimeType) {
                 case MyNotesNavigatetoAddNotesScreenState:
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyNotesAddScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyNotesAddScreen(
+                    title: "",
+                    description: "",
+                  )));
               }
             }),
       ),

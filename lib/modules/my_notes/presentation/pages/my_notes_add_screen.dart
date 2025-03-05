@@ -4,10 +4,14 @@ import 'package:flutter_note_app/core/helpers/services/local/db_helper.dart';
 import 'package:flutter_note_app/modules/my_notes/data/notes_model.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/pages/my_notes_display_screen.dart';
 import 'package:flutter_note_app/modules/my_notes/presentation/state_management/notes_bloc.dart';
+import 'package:flutter_note_app/shared/widgets/custom_app_bar.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class MyNotesAddScreen extends StatefulWidget {
-  const MyNotesAddScreen({super.key});
+  int? id;
+  String? title;
+  String? description;
+  MyNotesAddScreen({super.key,this.id, this.title, this.description});
 
   @override
   State<MyNotesAddScreen> createState() => _MyNotesAddScreenState();
@@ -20,42 +24,45 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
   final dbHelper = DatabaseHelper.instance;
 
   void insertData(String title, String description) async {
-    NotesModel notesModel =
-    NotesModel(title: title, subtitle: description);
+    NotesModel notesModel = NotesModel(title: title, subtitle: description);
     final id = await dbHelper.insert(notesModel);
+    notesModel.id = id;
     print('Notes added with ID: ${id}');
     setState(() {});
   }
 
+  void deleteData(int id) async {
+    if (widget.id != null) {
+      await dbHelper.delete(widget.id!);
+      print('Note Deleted with ID: ${widget.id}');
+      notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
+    } else {
+      print('No ID found for deletion');
+    }  }
 
 
 
   @override
+  void initState() {
+    super.initState();
+    titleController.text = widget.title.toString();
+    descriptionController.text = widget.description.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: HexColor('#F8EEE2'),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.delete,
-                color: HexColor('#d9614c'),
-              ),
-            )
-          ],
+        appBar: CustomAppBar(
+          onBackPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MyNotesDisplayScreen()));
+          },
+          onDeletePressed: () {
+            print('Delete Icon Clicked');
+            deleteData(widget.id!);
+          },
         ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: HexColor('#d9614c'),
-            onPressed: () {
-              print('Title: ${titleController.text}');
-              print('Description: ${descriptionController.text}');
-              insertData(titleController.text, descriptionController.text);
-              titleController.clear();
-              descriptionController.clear();
-              notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
-            },
-            child: Icon(Icons.save)),
+        floatingActionButton: _buildFloatingActionButton(),
         body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -65,49 +72,8 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
               builder: (context, state) {
                 return Column(
                   children: [
-                    SizedBox(
-                      height: 100,
-                      child: TextField(
-                        controller: titleController,
-                        maxLines: null,
-                        style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.w600),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 30),
-                            hintText: 'Add Title',
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.black26,
-                              ),
-                            )),
-                      ),
-                    ),
-                    Expanded(
-                        child: Container(
-                      width: double.infinity,
-                      child: TextField(
-                        controller: descriptionController,
-                        maxLines: null,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 30),
-                          hintText: 'Add Description',
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                        ),
-                      ),
-                    ))
+                    _buildTitleTextField(),
+                    _buildDescriptionTextField()
                   ],
                 );
               },
@@ -119,5 +85,64 @@ class _MyNotesAddScreenState extends State<MyNotesAddScreen> {
                 }
               }),
         ));
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+        backgroundColor: HexColor('#d9614c'),
+        onPressed: () {
+          print('Title: ${titleController.text}');
+          print('Description: ${descriptionController.text}');
+          insertData(titleController.text, descriptionController.text);
+          titleController.clear();
+          descriptionController.clear();
+          notesBloc.add(MyNotesNavigatetoNotesDisplayScreenEvent());
+        },
+        child: Icon(Icons.save));
+  }
+
+  Widget _buildTitleTextField() {
+    return SizedBox(
+      child: TextField(
+        controller: titleController,
+        maxLines: null,
+        style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+            hintText: 'Add Title',
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                width: 1,
+                color: Colors.black26,
+              ),
+            )),
+      ),
+    );
+  }
+
+  Widget _buildDescriptionTextField() {
+    return Expanded(
+        child: Container(
+      width: double.infinity,
+      child: TextField(
+        controller: descriptionController,
+        maxLines: null,
+        style: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w400,
+        ),
+        cursorColor: Colors.black,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+          hintText: 'Add Description',
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+        ),
+      ),
+    ));
   }
 }
